@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="AssignmentsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Customer_Table">
+    <Key>
+      <PropertyRef Name="CustomerId" />
+    </Key>
+    <Property Name="CustomerId" Type="Int32" Nullable="false" />
+    <Property Name="CustomerName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="ProductId" Type="Int32" />
+    <NavigationProperty Name="ProductTable" Relationship="Self.FK_Customer_Table_ProductTable" FromRole="Customer_Table" ToRole="ProductTable" />
+  </EntityType>
+  <EntityType Name="ProductTable">
+    <Key>
+      <PropertyRef Name="ProductId" />
+    </Key>
+    <Property Name="ProductId" Type="Int32" Nullable="false" />
+    <Property Name="ProductName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Rate" Type="Int32" />
+    <NavigationProperty Name="Customer_Table" Relationship="Self.FK_Customer_Table_ProductTable" FromRole="ProductTable" ToRole="Customer_Table" />
+  </EntityType>
+  <Association Name="FK_Customer_Table_ProductTable">
+    <End Role="ProductTable" Type="Self.ProductTable" Multiplicity="0..1" />
+    <End Role="Customer_Table" Type="Self.Customer_Table" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductTable">
+        <PropertyRef Name="ProductId" />
+      </Principal>
+      <Dependent Role="Customer_Table">
+        <PropertyRef Name="ProductId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="AssignmentsEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Customer_Table" EntityType="Self.Customer_Table" />
+    <EntitySet Name="ProductTables" EntityType="Self.ProductTable" />
+    <AssociationSet Name="FK_Customer_Table_ProductTable" Association="Self.FK_Customer_Table_ProductTable">
+      <End Role="ProductTable" EntitySet="ProductTables" />
+      <End Role="Customer_Table" EntitySet="Customer_Table" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
